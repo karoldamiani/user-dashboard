@@ -1,103 +1,128 @@
+"use client";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [openDropdownId, setOpenDropdownId] = useState(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+
+  useEffect(() => {
+    fetch("https://uoc2zyn2f1.execute-api.us-east-1.amazonaws.com/users")
+      .then((res) => res.json())
+      .then((json) => {
+        setUsers(json);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Erro na requisição:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  const filteredUsers = users.filter(
+    (user) =>
+      user.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      user.lastName.toLowerCase().includes(search.toLowerCase())
+  );
+
+ 
+  return (
+    <main className="max-w-5xl mx-auto p-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 items-center">
+        <div className="col-span-1 md:col-span-2">
+          <div className="relative w-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="absolute w-5 h-5 top-2.5 left-2.5 text-slate-600"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <input
+              className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md pl-10 pr-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow w-full"
+              placeholder="Search"
+              value={search}
+              onChange={(ev) => setSearch(ev.target.value)}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+
+      
+
+      {/* Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {filteredUsers.map((user) => (
+          <div
+            key={user.id}
+            className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700"
+          >
+            <div className="relative flex justify-end px-4 pt-4">
+              <button
+                onClick={() =>
+                  setOpenDropdownId(openDropdownId === user.id ? null : user.id)
+                }
+                className="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-700 rounded-lg text-sm p-1.5"
+                type="button"
+              >
+                <span className="sr-only">Open dropdown</span>
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 16 3">
+                  <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+                </svg>
+              </button>
+              {openDropdownId === user.id && (
+                <div className="absolute right-0 top-10 z-20 w-44 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+                  <ul className="py-2">
+                    <li>
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();                       
+                        }}
+                        className="block px-4 py-2 text-sm text-white hover:bg-gray-700"
+                      >
+                        Edit
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300"
+                      >
+                        Delete
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+              
+            <div className="flex flex-col items-center pb-10">
+              <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+                {user.firstName} {user.lastName}
+              </h5>
+              <p className="text-slate-600 leading-normal font-light">
+                📧 {user.email}
+              </p>
+              <p className="text-slate-600 leading-normal font-light">
+                📍 {user.city}
+              </p>
+              
+            </div>
+          </div>
+        ))}        
+      </div>
+    
+
+
+    </main>
   );
 }
