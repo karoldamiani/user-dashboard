@@ -14,7 +14,7 @@ export default function Home() {
     modalRef.current = modalIsOpen;
   }, [modalIsOpen]);
 
-  
+
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape" && modalRef.current) {
@@ -30,7 +30,7 @@ export default function Home() {
     return () => document.removeEventListener("keydown", handleEsc);
   }, []);
 
-  
+
 
   useEffect(() => {
     fetch("https://uoc2zyn2f1.execute-api.us-east-1.amazonaws.com/users")
@@ -45,19 +45,19 @@ export default function Home() {
       });
 
     const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && modalIsOpen) {        
+      if (event.key === "Escape" && modalIsOpen) {
         setModalIsOpen(false);
         if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
+          document.activeElement.blur();
+        }
       }
     };
 
     document.addEventListener("keydown", handleEsc);
 
     document.addEventListener("keydown", handleEsc);
-  return () => document.removeEventListener("keydown", handleEsc);
-}, [modalIsOpen]);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [modalIsOpen]);
 
   const filteredUsers = users.filter(
     (user) =>
@@ -93,7 +93,7 @@ export default function Home() {
         </div>
         <div className="col-span-2 justify-self-end">
           <button
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+            className="px-4 py-2 border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 text-white rounded-md hover:bg-gray-600 transition"
             onClick={() => setModalIsOpen(true)}
           >
             New user
@@ -168,9 +168,9 @@ export default function Home() {
             className="absolute inset-0 bg-black opacity-50"
             onClick={() => setModalIsOpen(false)}
           />
-          <div className="relative z-10 h-full max-h-[600px] w-full max-w-2xl overflow-y-auto bg-white p-6 md:rounded-lg shadow-lg">
-            <div className="mb-6 border-b border-blue-200 py-5 text-center">
-              <h2 className="text-3xl font-semibold text-zinc-600">Teste modal</h2>
+          <div className="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 relative z-10 max-w-2xl p-6">
+            <div className="border-b border-white/10 pb-2">
+              <h2 className="text-base/7 text-white">Create user</h2>
             </div>
             <button
               className="absolute right-0 top-0 m-4 text-gray-400 transition-all hover:text-red-400"
@@ -178,6 +178,45 @@ export default function Home() {
             >
               X
             </button>
+
+            <form className="mt-10 grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-4">
+              <div className="sm:col-span-2">
+                <label htmlFor="first-name" className="block text-sm/6 font-medium text-white">First name</label>
+                <div className="mt-2">
+                  <input id="first-name" type="text" name="first-name" autocomplete="given-name" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="last-name" className="block text-sm/6 font-medium text-white">Last name</label>
+                <div className="mt-2">
+                  <input id="last-name" type="text" name="last-name" autocomplete="family-name" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                </div>
+              </div>
+
+
+              <div className="sm:col-span-4">
+                <label htmlFor="email" className="block text-sm/6 font-medium text-white">Email address</label>
+                <div className="mt-2">
+                  <input id="email" type="email" name="email" autocomplete="email" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                </div>
+              </div>            
+
+              <div className="sm:col-span-2 sm:col-start-1">
+                <label htmlFor="city" className="block text-sm/6 font-medium text-white">City</label>
+                <div className="mt-2">
+                  <input id="city" type="text" name="city" autocomplete="address-level2" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="region" className="block text-sm/6 font-medium text-white">Age</label>
+                <div className="mt-2">
+                  <input id="age" type="number" name="age" autocomplete="age" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                </div>
+              </div>   
+            </form>
+
           </div>
         </div>
       )}
