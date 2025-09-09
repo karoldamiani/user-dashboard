@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -7,7 +6,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [openDropdownId, setOpenDropdownId] = useState(null);
-
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
     fetch("https://uoc2zyn2f1.execute-api.us-east-1.amazonaws.com/users")
@@ -28,11 +27,11 @@ export default function Home() {
       user.lastName.toLowerCase().includes(search.toLowerCase())
   );
 
- 
   return (
     <main className="max-w-5xl mx-auto p-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 items-center">
-        <div className="col-span-1 md:col-span-2">
+      {/* search + new user */}
+      <div className="grid md:grid-cols-3 gap-4 mb-4 items-center">
+        <div className="col-span-2 md:col-span-1">
           <div className="relative w-full">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -54,11 +53,17 @@ export default function Home() {
             />
           </div>
         </div>
+        <div className="col-span-2 justify-self-end">
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+            onClick={() => setModalIsOpen(true)}
+          >
+            New user
+          </button>
+        </div>
       </div>
 
-      
-
-      {/* Cards */}
+      {/* cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {filteredUsers.map((user) => (
           <div
@@ -84,9 +89,7 @@ export default function Home() {
                     <li>
                       <a
                         href="#"
-                        onClick={(e) => {
-                          e.preventDefault();                       
-                        }}
+                        onClick={(e) => e.preventDefault()}
                         className="block px-4 py-2 text-sm text-white hover:bg-gray-700"
                       >
                         Edit
@@ -104,7 +107,7 @@ export default function Home() {
                 </div>
               )}
             </div>
-              
+              {/* card separado */}
             <div className="flex flex-col items-center pb-10">
               <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
                 {user.firstName} {user.lastName}
@@ -115,14 +118,32 @@ export default function Home() {
               <p className="text-slate-600 leading-normal font-light">
                 📍 {user.city}
               </p>
-              
             </div>
           </div>
-        ))}        
+        ))}
       </div>
-    
 
-
+      {/* modal */}
+      {modalIsOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black opacity-50"
+            onClick={() => setModalIsOpen(false)}
+          />
+          <div className="relative z-10 h-full max-h-[600px] w-full max-w-2xl overflow-y-auto bg-white p-6 md:rounded-lg shadow-lg">
+            <div className="mb-6 border-b border-blue-200 py-5 text-center">
+              <h2 className="text-3xl font-semibold text-zinc-600">Teste modal</h2>
+            </div>
+            <button
+              className="absolute right-0 top-0 m-4 text-gray-400 transition-all hover:text-red-400"
+              onClick={() => setModalIsOpen(false)}
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
+
