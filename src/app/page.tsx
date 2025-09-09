@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function Home() {
   const [users, setUsers] = useState([]);
@@ -7,6 +7,30 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const modalRef = useRef(modalIsOpen);
+
+  useEffect(() => {
+    modalRef.current = modalIsOpen;
+  }, [modalIsOpen]);
+
+  
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && modalRef.current) {
+        setModalIsOpen(false);
+
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, []);
+
+  
 
   useEffect(() => {
     fetch("https://uoc2zyn2f1.execute-api.us-east-1.amazonaws.com/users")
@@ -19,7 +43,21 @@ export default function Home() {
         console.error("Erro na requisição:", err);
         setLoading(false);
       });
-  }, []);
+
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && modalIsOpen) {        
+        setModalIsOpen(false);
+        if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+      }
+    };
+
+    document.addEventListener("keydown", handleEsc);
+
+    document.addEventListener("keydown", handleEsc);
+  return () => document.removeEventListener("keydown", handleEsc);
+}, [modalIsOpen]);
 
   const filteredUsers = users.filter(
     (user) =>
@@ -107,7 +145,7 @@ export default function Home() {
                 </div>
               )}
             </div>
-              {/* card separado */}
+            {/* card separado */}
             <div className="flex flex-col items-center pb-10">
               <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
                 {user.firstName} {user.lastName}
