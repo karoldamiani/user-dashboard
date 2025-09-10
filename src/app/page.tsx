@@ -181,26 +181,25 @@ export default function Home() {
 
             <form className="mt-10 grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-4">
               <div className="sm:col-span-2">
-                <label htmlFor="first-name" className="block text-sm/6 font-medium text-white">First name</label>
+                <label htmlFor="firstName" className="block text-sm/6 font-medium text-white">First name</label>
                 <div className="mt-2">
-                  <input id="first-name" type="text" name="first-name" autocomplete="given-name" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                  <input id="firstName" type="text" name="firstName" autocomplete="given-name" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                 </div>
               </div>
 
               <div className="sm:col-span-2">
-                <label htmlFor="last-name" className="block text-sm/6 font-medium text-white">Last name</label>
+                <label htmlFor="lastName" className="block text-sm/6 font-medium text-white">Last name</label>
                 <div className="mt-2">
-                  <input id="last-name" type="text" name="last-name" autocomplete="family-name" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                  <input id="lastName" type="text" name="lastName" autocomplete="family-name" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                 </div>
               </div>
-
 
               <div className="sm:col-span-4">
                 <label htmlFor="email" className="block text-sm/6 font-medium text-white">Email address</label>
                 <div className="mt-2">
                   <input id="email" type="email" name="email" autocomplete="email" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                 </div>
-              </div>            
+              </div>
 
               <div className="sm:col-span-2 sm:col-start-1">
                 <label htmlFor="city" className="block text-sm/6 font-medium text-white">City</label>
@@ -214,7 +213,26 @@ export default function Home() {
                 <div className="mt-2">
                   <input id="age" type="number" name="age" autocomplete="age" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                 </div>
-              </div>   
+              </div>
+
+              <div className="sm:col-span-4 border-t border-white/10 mt-8 pt-4 flex justify-end gap-x-6">
+                <button
+                  type="button"
+                  className="text-sm font-semibold text-white"
+                  onClick={() => setModalIsOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                >
+                  Save
+                </button>
+              </div>
+
+
+
             </form>
 
           </div>
