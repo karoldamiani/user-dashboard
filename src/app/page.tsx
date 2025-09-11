@@ -25,11 +25,9 @@ export default function Home() {
         }
       }
     };
-
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, []);
-
 
 
   useEffect(() => {
@@ -54,16 +52,49 @@ export default function Home() {
     };
 
     document.addEventListener("keydown", handleEsc);
-
-    document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [modalIsOpen]);
+
+  const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const newUser = {
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
+      email: formData.get("email"),
+      city: formData.get("city"),
+      age: formData.get("age"),
+    };
+
+    try {
+      const res = await fetch("https://uoc2zyn2f1.execute-api.us-east-1.amazonaws.com/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newUser),
+      });
+
+      if (!res.ok) {
+        throw new Error("Erro ao salvar usuário");
+      }
+
+      const savedUser = await res.json();
+
+      setUsers((prev) => [...prev, savedUser]);
+      setModalIsOpen(false);
+    } catch (err) {
+      console.error("Erro no POST:", err);
+    }
+  };
+
+
 
   const filteredUsers = users.filter(
     (user) =>
       user.firstName.toLowerCase().includes(search.toLowerCase()) ||
       user.lastName.toLowerCase().includes(search.toLowerCase())
   );
+
 
   return (
     <main className="max-w-5xl mx-auto p-4">
@@ -163,12 +194,12 @@ export default function Home() {
 
       {/* modal */}
       {modalIsOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
             className="absolute inset-0 bg-black opacity-50"
             onClick={() => setModalIsOpen(false)}
           />
-          <div className="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 relative z-10 max-w-2xl p-6">
+          <div className="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 relative z-10 w-full max-w-2xl max-h-screen overflow-y-auto p-6">
             <div className="border-b border-white/10 pb-2">
               <h2 className="text-base/7 text-white">Create user</h2>
             </div>
@@ -179,39 +210,39 @@ export default function Home() {
               X
             </button>
 
-            <form className="mt-10 grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-4">
+            <form onSubmit={handleSave} className="mt-10 grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-4">
               <div className="sm:col-span-2">
                 <label htmlFor="firstName" className="block text-sm/6 font-medium text-white">First name</label>
                 <div className="mt-2">
-                  <input id="firstName" type="text" name="firstName" autocomplete="given-name" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                  <input id="firstName" type="text" name="firstName" placeholder="First name" autocomplete="given-name" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                 </div>
               </div>
 
               <div className="sm:col-span-2">
                 <label htmlFor="lastName" className="block text-sm/6 font-medium text-white">Last name</label>
                 <div className="mt-2">
-                  <input id="lastName" type="text" name="lastName" autocomplete="family-name" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                  <input id="lastName" type="text" name="lastName" placeholder="Last name" autocomplete="family-name" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                 </div>
               </div>
 
               <div className="sm:col-span-4">
                 <label htmlFor="email" className="block text-sm/6 font-medium text-white">Email address</label>
                 <div className="mt-2">
-                  <input id="email" type="email" name="email" autocomplete="email" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                  <input id="email" type="email" name="email" placeholder="Email" autocomplete="email" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                 </div>
               </div>
 
               <div className="sm:col-span-2 sm:col-start-1">
                 <label htmlFor="city" className="block text-sm/6 font-medium text-white">City</label>
                 <div className="mt-2">
-                  <input id="city" type="text" name="city" autocomplete="address-level2" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                  <input id="city" type="text" name="city" placeholder="City" autocomplete="address-level2" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                 </div>
               </div>
 
               <div className="sm:col-span-2">
                 <label htmlFor="region" className="block text-sm/6 font-medium text-white">Age</label>
                 <div className="mt-2">
-                  <input id="age" type="number" name="age" autocomplete="age" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                  <input id="age" type="number" name="age" placeholder="Age" autocomplete="age" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                 </div>
               </div>
 
