@@ -7,6 +7,7 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [editUser, setEditUser] = useState(null)
 
   const modalRef = useRef(modalIsOpen);
 
@@ -54,6 +55,16 @@ export default function Home() {
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [modalIsOpen]);
+
+  const handleCreate = () => {
+    setEditUser(null);
+    setModalIsOpen(true);
+  }
+
+  const handleEdit = (user) => {
+    setEditUser(user);
+    setModalIsOpen(true);
+  }
 
   const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -153,24 +164,23 @@ export default function Home() {
                 </svg>
               </button>
               {openDropdownId === user.id && (
-                <div className="absolute right-0 top-10 z-20 w-44 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
-                  <ul className="py-2">
+                <div className="absolute right-0 top-10 z-20 w-24 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+                  <ul className="py-1">
                     <li>
-                      <a
-                        href="#"
-                        onClick={(e) => e.preventDefault()}
-                        className="block px-4 py-2 text-sm text-white hover:bg-gray-700"
+                      <button                       
+                        onClick={() => 
+                          handleEdit(user)}
+                        className="block w-full px-4 py-2 text-sm text-white hover:bg-gray-700"
                       >
                         Edit
-                      </a>
+                      </button>
                     </li>
                     <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300"
+                      <button                      
+                        className="block w-full px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300"
                       >
                         Delete
-                      </a>
+                      </button>
                     </li>
                   </ul>
                 </div>
