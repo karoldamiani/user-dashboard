@@ -11,6 +11,12 @@ export default function Home() {
 
   const modalRef = useRef(modalIsOpen);
 
+  const filteredUsers = users.filter(
+    (user) =>
+      user.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      user.lastName.toLowerCase().includes(search.toLowerCase())
+  );
+
   useEffect(() => {
     modalRef.current = modalIsOpen;
   }, [modalIsOpen]);
@@ -68,45 +74,52 @@ export default function Home() {
 
   const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    
     const formData = new FormData(event.currentTarget);
-    const newUser = {
-      firstName: formData.get("firstName"),
-      lastName: formData.get("lastName"),
-      email: formData.get("email"),
-      city: formData.get("city"),
-      age: formData.get("age"),
+    const userData = {
+        firstName: formData.get("firstName"),
+        lastName: formData.get("lastName"),
+        email: formData.get("email"),
+        city: formData.get("city"),
+        age: formData.get("age"),
     };
+    
+    let url = "https://uoc2zyn2f1.execute-api.us-east-1.amazonaws.com/users";
+    let method = "POST";
 
-    try {
-      const res = await fetch("https://uoc2zyn2f1.execute-api.us-east-1.amazonaws.com/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newUser),
-      });
-
-      if (!res.ok) {
-        throw new Error("Erro ao salvar usuário");
-      }
-
-      const savedUser = await res.json();
-
-      setUsers((prev) => [...prev, savedUser]);
-      setModalIsOpen(false);
-    } catch (err) {
-      console.error("Erro no POST:", err);
+    if (editingUser) {        
+        url = `${url}/${editingUser.id}`;
+        method = "PUT";
     }
-  };
 
+    try {        
+        const res = await fetch(url, {
+            method: method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(userData),
+        });
 
+        if (!res.ok) {
+            throw new Error(`Erro ao ${editingUser ? 'editar' : 'salvar'} o usuário.`);
+        }
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.firstName.toLowerCase().includes(search.toLowerCase()) ||
-      user.lastName.toLowerCase().includes(search.toLowerCase())
-  );
+        const savedUser = await res.json();
+        
+        if (editingUser) {           
+            setUsers(users.map(u => u.id === savedUser.id ? savedUser : u));
+        } else {            
+            setUsers((prev) => [...prev, savedUser]);
+        }       
+        
+        setModalIsOpen(false);
+        setEditingUser(null);
 
+    } catch (err) {
+        console.error("Erro na requisição:", err);
+    }
+};
 
+  
   return (
     <main className="max-w-5xl mx-auto p-4">
       {/* search + new user */}
