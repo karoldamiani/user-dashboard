@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 
 export default function Home() {
   const [users, setUsers] = useState([]);
@@ -7,7 +7,8 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState(null)
+  const [editUser, setEditUser] = useState(null)
+  const [viewUser, setViewUser] = useState(false)
 
   const modalRef = useRef(modalIsOpen);
 
@@ -63,14 +64,28 @@ export default function Home() {
   }, [modalIsOpen]);
 
   const handleCreate = () => {
-    setEditingUser(null);
+    setEditUser(null);
     setModalIsOpen(true);
+    setViewUser(false);
   }
 
   const handleEdit = (user) => {
-    setEditingUser(user);
+    setEditUser(user);
     setModalIsOpen(true);
+    setViewUser(false);
   }
+
+  const handleView = (user) => {
+    setViewUser(true);
+    setModalIsOpen(true);
+    setEditUser(user);
+  }
+
+  const modalTitle = useMemo(() => {
+    if (viewUser) return "User Details";
+    if (editUser) return "Edit User";
+    return "Create User";
+  }, [viewUser, editUser]);
 
   const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -87,8 +102,8 @@ export default function Home() {
     let url = "https://uoc2zyn2f1.execute-api.us-east-1.amazonaws.com/users";
     let method = "POST";
 
-    if (editingUser) {
-      url = `${url}/${editingUser.id}`;
+    if (editUser) {
+      url = `${url}/${editUser.id}`;
       method = "PUT";
     }
 
@@ -100,19 +115,19 @@ export default function Home() {
       });
 
       if (!res.ok) {
-        throw new Error(`Erro ao ${editingUser ? 'editar' : 'salvar'} o usuário.`);
+        throw new Error(`Erro ao ${editUser ? 'editar' : 'salvar'} o usuário.`);
       }
 
       const savedUser = await res.json();
 
-      if (editingUser) {
+      if (editUser) {
         setUsers(users.map(u => u.id === savedUser.id ? savedUser : u));
       } else {
         setUsers((prev) => [...prev, savedUser]);
       }
 
       setModalIsOpen(false);
-      setEditingUser(null);
+      setEditUser(null);
 
     } catch (err) {
       console.error("Erro na requisição:", err);
@@ -122,7 +137,6 @@ export default function Home() {
 
   return (
     <main className="max-w-5xl mx-auto p-4">
-      {/* search + new user */}
       <div className="grid md:grid-cols-3 gap-4 mb-4 items-center">
         <div className="col-span-2 md:col-span-1">
           <div className="relative w-full">
@@ -198,7 +212,6 @@ export default function Home() {
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-">
                           <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                         </svg>
-
                         Delete
                       </button>
                     </li>
@@ -216,11 +229,12 @@ export default function Home() {
               </p>
               <p className="text-slate-600 leading-normal font-light">
                 📍 {user.city}
-              </p>             
-              <div className="w-full flex justify-center mt-8 mb-1">                
+              </p>
+              <div className="w-full flex justify-center mt-8 mb-1">
                 <button
                   type="button"
                   className="w-full sm:w-auto inline-flex items-center justify-center rounded-md bg-white/10 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-white/20"
+                  onClick={() => handleView(user)}
                 >
                   Show more
                 </button>
@@ -239,7 +253,7 @@ export default function Home() {
           />
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 relative z-10 w-full max-w-2xl max-h-screen overflow-y-auto p-6">
             <div className="border-b border-white/10 pb-2">
-              <h2 className="text-base/7 text-white">{editingUser ? 'Edit User' : 'Create user'}</h2>
+              <h2 className="text-base/7 text-white">{modalTitle}</h2>
             </div>
             <button
               className="absolute right-0 top-0 m-4 text-gray-400 transition-all hover:text-red-400"
@@ -247,7 +261,6 @@ export default function Home() {
             >
               X
             </button>
-
             <form onSubmit={handleSave} className="mt-10 grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-4">
               <div className="sm:col-span-2">
                 <label htmlFor="firstName" className="block text-sm/6 font-medium text-white">First name</label>
@@ -257,7 +270,8 @@ export default function Home() {
                     name="firstName"
                     placeholder="First name"
                     autocomplete="given-name"
-                    defaultValue={editingUser ? editingUser.firstName : ''}
+                    defaultValue={editUser ? editUser.firstName : ''}
+                    disabled={viewUser}
                     className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                 </div>
               </div>
@@ -270,7 +284,8 @@ export default function Home() {
                     name="lastName"
                     placeholder="Last name"
                     autocomplete="family-name"
-                    defaultValue={editingUser ? editingUser.lastName : ''}
+                    defaultValue={editUser ? editUser.lastName : ''}
+                    disabled={viewUser}
                     className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                 </div>
               </div>
@@ -283,7 +298,8 @@ export default function Home() {
                     name="email"
                     placeholder="Email"
                     autocomplete="email"
-                    defaultValue={editingUser ? editingUser.email : ''}
+                    defaultValue={editUser ? editUser.email : ''}
+                    disabled={viewUser}
                     className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                 </div>
               </div>
@@ -295,7 +311,8 @@ export default function Home() {
                     type="text" name="city"
                     placeholder="City"
                     autocomplete="address-level2"
-                    defaultValue={editingUser ? editingUser.city : ''}
+                    defaultValue={editUser ? editUser.firstName : ''}
+                    disabled={viewUser}               
                     className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                 </div>
               </div>
@@ -308,7 +325,8 @@ export default function Home() {
                     name="age"
                     placeholder="Age"
                     autocomplete="age"
-                    defaultValue={editingUser ? editingUser.age : ''}
+                    defaultValue={editUser ? editUser.age : ''}
+                    disabled={viewUser}
                     className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                 </div>
               </div>
@@ -325,7 +343,7 @@ export default function Home() {
                   type="submit"
                   className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                 >
-                  {editingUser ? 'Save Changes' : 'Save'}
+                  {editUser ? 'Save Changes' : 'Save'}
                 </button>
               </div>
 
