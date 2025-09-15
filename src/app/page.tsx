@@ -1,4 +1,5 @@
 "use client";
+import { error } from "console";
 import { useEffect, useState, useRef, useMemo } from "react";
 
 export default function Home() {
@@ -82,9 +83,29 @@ export default function Home() {
   }
 
   const getModalTitle = () => {
-  if (viewUser) return "User Details";
-  if (editUser) return "Edit User";
-  return "Create User";
+    if (viewUser) return "User Details";
+    if (editUser) return "Edit User";
+    return "Create User";
+  };
+
+  const handleDelete = async (userId: string) => {
+  try {    
+    const confirmed = window.confirm("Tem certeza que deseja excluir este usuário?");
+    if (!confirmed) return;
+    
+    const res = await fetch(`https://uoc2zyn2f1.execute-api.us-east-1.amazonaws.com/users/${userId}`, {
+      method: "DELETE",
+    });
+    
+    if (!res.ok) {
+      throw new Error("Erro ao excluir usuário.");
+    }
+
+    setUsers((prev) => prev.filter((u) => u.id !== userId));
+
+  } catch (err) {
+    console.error("Erro na requisição:", err);
+  }
 };
 
   const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -219,7 +240,7 @@ export default function Home() {
                 </div>
               )}
             </div>
-            
+
             <div className="flex flex-col items-center pb-6 px-4 text-center">
               <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
                 {user.firstName} {user.lastName}
@@ -254,7 +275,7 @@ export default function Home() {
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 relative z-10 w-full max-w-2xl max-h-screen overflow-y-auto p-6">
             <div className="border-b border-white/10 pb-2">
               <h2 className="text-base/7 text-white">{getModalTitle()}</h2>
-            </div>            
+            </div>
             <form onSubmit={handleSave} className="mt-10 grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-4">
               <div className="sm:col-span-2">
                 <label htmlFor="firstName" className="block text-sm/6 font-medium text-white">First name</label>
@@ -267,8 +288,8 @@ export default function Home() {
                     defaultValue={editUser ? editUser.firstName : ''}
                     disabled={viewUser}
                     className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                     />
-                    
+                  />
+
                 </div>
               </div>
 
@@ -343,7 +364,7 @@ export default function Home() {
                  hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 
                  focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                   >
-                    {editUser ? "Save Changes" : "Save"} 
+                    {editUser ? "Save Changes" : "Save"}
                   </button>
                 )}
               </div>
