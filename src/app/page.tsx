@@ -1,6 +1,6 @@
 "use client";
 import { error } from "console";
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef, } from "react";
 
 export default function Home() {
   const [users, setUsers] = useState([]);
@@ -82,7 +82,7 @@ export default function Home() {
     setEditUser(user);
   }
 
-  const getModalTitle = () => {
+  const getModalTitle = ()  => {
     if (viewUser) return "User Details";
     if (editUser) return "Edit User";
     return "Create User";
@@ -228,6 +228,8 @@ export default function Home() {
                     </li>
                     <li>
                       <button
+                      onClick={() =>
+                          handleDelete(user.id)}
                         className="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-">
