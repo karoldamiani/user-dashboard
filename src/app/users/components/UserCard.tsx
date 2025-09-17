@@ -26,7 +26,7 @@ export default function UserCard({ user, openDropdownId, setOpenDropdownId, onEd
         {openDropdownId === user.id && <DropdownMenu onEdit={() => onEdit(user)} onDelete={() => onDelete(user.id)} />}
       </div>
 
-      <div className="flex flex-col items-center pb-6 px-4 text-center">
+      <div className="flex flex-col items-center pb-6 px-4 text-center ">
         <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{user.firstName} {user.lastName}</h5>
         <p className="text-slate-600 leading-normal font-light">📧 {user.email}</p>
         <p className="text-slate-600 leading-normal font-light">📍 {user.city}</p>

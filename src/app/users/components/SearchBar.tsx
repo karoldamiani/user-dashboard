@@ -15,7 +15,7 @@ export default function SearchBar({ search, setSearch }: SearchBarProps) {
           clipRule="evenodd" />
       </svg>
       <input
-        className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md pl-10 pr-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow w-full"
+        className="rounded-lg bg-slate-100 focus:bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md pl-10 pr-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow w-full"
         placeholder="Search"
         value={search}
         onChange={(ev) => setSearch(ev.target.value)}

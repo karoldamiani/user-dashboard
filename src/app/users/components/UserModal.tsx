@@ -19,17 +19,23 @@ export default function UserModal({ isOpen, editUser, viewUser, onClose, onSave 
     return "Create User";
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black opacity-50" onClick={onClose} />
-      <div className="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 relative z-10 w-full max-w-2xl max-h-screen overflow-y-auto p-6">
-        <div className="border-b border-white/10 pb-2">
-          <h2 className="text-base/7 text-white">{getModalTitle()}</h2>
-        </div>
-        <form onSubmit={onSave} className="mt-6 grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-4">
-          {/* First Name */}
-          <div className="sm:col-span-2">
-            <label htmlFor="firstName" className="block text-sm font-medium text-white">First name</label>
+return (
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="absolute inset-0 bg-black opacity-50" onClick={onClose} />
+    <div className="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 relative z-10 w-full max-w-2xl max-h-screen overflow-y-auto p-6">
+      <div className="border-b border-white/10 pb-2">
+        <h2 className="text-center text-2xl/9 font-bold tracking-tight text-white">{getModalTitle()}</h2>
+      </div>
+      <form
+        onSubmit={onSave}
+        className="mt-6 grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-4"
+      >
+        {/* First Name */}
+        <div className="sm:col-span-2">
+          <label htmlFor="firstName" className="block text-sm font-medium text-gray-100">
+            First name
+          </label>
+          <div className="mt-2">
             <input
               id="firstName"
               name="firstName"
@@ -37,13 +43,17 @@ export default function UserModal({ isOpen, editUser, viewUser, onClose, onSave 
               defaultValue={editUser?.firstName || ""}
               disabled={viewUser}
               autoComplete="given-name"
-              className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500"
+              className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm"
             />
           </div>
+        </div>
 
-          {/* Last Name */}
-          <div className="sm:col-span-2">
-            <label htmlFor="lastName" className="block text-sm font-medium text-white">Last name</label>
+        {/* Last Name */}
+        <div className="sm:col-span-2">
+          <label htmlFor="lastName" className="block text-sm font-medium text-white">
+            Last name
+          </label>
+          <div className="mt-2">
             <input
               id="lastName"
               name="lastName"
@@ -51,13 +61,17 @@ export default function UserModal({ isOpen, editUser, viewUser, onClose, onSave 
               defaultValue={editUser?.lastName || ""}
               disabled={viewUser}
               autoComplete="family-name"
-              className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500"
+              className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm"
             />
           </div>
+        </div>
 
-          {/* Email */}
-          <div className="sm:col-span-4">
-            <label htmlFor="email" className="block text-sm font-medium text-white">Email</label>
+        {/* Email */}
+        <div className="sm:col-span-4">
+          <label htmlFor="email" className="block text-sm font-medium text-white">
+            Email
+          </label>
+          <div className="mt-2">
             <input
               id="email"
               name="email"
@@ -65,13 +79,17 @@ export default function UserModal({ isOpen, editUser, viewUser, onClose, onSave 
               defaultValue={editUser?.email || ""}
               disabled={viewUser}
               autoComplete="email"
-              className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500"
+              className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm"
             />
           </div>
+        </div>
 
-          {/* City */}
-          <div className="sm:col-span-2">
-            <label htmlFor="city" className="block text-sm font-medium text-white">City</label>
+        {/* City */}
+        <div className="sm:col-span-2">
+          <label htmlFor="city" className="block text-sm font-medium text-white">
+            City
+          </label>
+          <div className="mt-2">
             <input
               id="city"
               name="city"
@@ -79,13 +97,17 @@ export default function UserModal({ isOpen, editUser, viewUser, onClose, onSave 
               defaultValue={editUser?.city || ""}
               disabled={viewUser}
               autoComplete="address-level2"
-              className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500"
+              className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm"
             />
           </div>
+        </div>
 
-          {/* Age */}
-          <div className="sm:col-span-2">
-            <label htmlFor="age" className="block text-sm font-medium text-white">Age</label>
+        {/* Age */}
+        <div className="sm:col-span-2">
+          <label htmlFor="age" className="block text-sm font-medium text-white">
+            Age
+          </label>
+          <div className="mt-2">
             <input
               id="age"
               name="age"
@@ -93,23 +115,25 @@ export default function UserModal({ isOpen, editUser, viewUser, onClose, onSave 
               defaultValue={editUser?.age || ""}
               disabled={viewUser}
               autoComplete="age"
-              className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-gray-500 focus:outline-indigo-500"
+              className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm"
             />
           </div>
+        </div>
 
-          {/* Actions */}
-          <div className="sm:col-span-4 border-t border-white/10 mt-6 pt-4 flex justify-end gap-x-4">
-            <Button variant="secondary" type="button" onClick={onClose}>
-              {viewUser ? "Close" : "Cancel"}
+        {/* Actions */}
+        <div className="sm:col-span-4 border-t border-white/10 mt-6 pt-4 flex justify-end gap-x-4">
+          <Button variant="secondary" type="button" onClick={onClose}>
+            {viewUser ? "Close" : "Cancel"}
+          </Button>
+          {!viewUser && (
+            <Button type="submit" variant="primary">
+              {editUser ? "Save Changes" : "Save"}
             </Button>
-            {!viewUser && (
-              <Button type="submit" variant="primary">
-                {editUser ? "Save Changes" : "Save"}
-              </Button>
-            )}
-          </div>
-        </form>
-      </div>
+          )}
+        </div>
+      </form>
     </div>
-  );
+  </div>
+);
+
 }

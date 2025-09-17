@@ -6,7 +6,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export default function Button({ children, variant = "primary", ...props }: ButtonProps) {
-  let className = "rounded-md px-3 py-2 text-sm font-semibold shadow-sm ";
+  let className = "bg-sky-600 hover:bg-sky-500 text-white rounded-lg px-4 py-2.5 text-sm font-medium shadow-md transition";
   switch (variant) {
     case "primary":
       className += "bg-indigo-600 text-white hover:bg-indigo-500";
